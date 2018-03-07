@@ -1,4 +1,6 @@
 
+local URL = 'https://storage.googleapis.com/densenet/lungDataset.tar.gz'
+
 local M = {}
 
 local function convertToTensor(files)
@@ -22,15 +24,18 @@ local function convertToTensor(files)
 end
 
 function M.exec(opt, cacheFile)
+   print("=> Downloading lungROI dataset from " .. URL)
+   local ok = os.execute('curl ' .. URL .. ' | tar xz -C gen/')
+   assert(ok == true or ok == 0, 'error downloading lungROI dataset')
 
    print(" | combining dataset into a single file")
    local trainData = convertToTensor({
-      'lungROI-training.t7',
+      'gen/lungDataset.tar/training.t7',
    local testData = convertToTensor({
-      'lungROI-testing.t7',
+      'gen/lungDataset/testing.t7',
    })
 
-   print(" | saving CIFAR-10 dataset to " .. cacheFile)
+   print(" | saving lungROI dataset to " .. cacheFile)
    torch.save(cacheFile, {
       train = trainData,
       val = testData,
