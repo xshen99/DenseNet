@@ -29,31 +29,31 @@ local function createModel(opt)
       if opt.optMemory >= 3 then
          model:add(nn.DenseConnectLayerCustom(nChannels, opt))
       else
-         model:add(DenseConnectLayerStandard(nChannels, opt))     
+         model:add(DenseConnectLayerStandard(nChannels, opt))
       end
    end
 
 
    function addTransition(model, nChannels, nOutChannels, opt, last, pool_size)
-      if opt.optMemory >= 3 then     
+      if opt.optMemory >= 3 then
          model:add(nn.JoinTable(2))
       end
 
       model:add(cudnn.SpatialBatchNormalization(nChannels))
-      model:add(cudnn.ReLU(true))      
+      model:add(cudnn.ReLU(true))
       if last then
          model:add(cudnn.SpatialAveragePooling(pool_size, pool_size))
-         model:add(nn.Reshape(nChannels))      
+         model:add(nn.Reshape(nChannels))
       else
          model:add(cudnn.SpatialConvolution(nChannels, nOutChannels, 1, 1, 1, 1, 0, 0))
          if opt.dropRate > 0 then model:add(nn.Dropout(opt.dropRate)) end
          model:add(cudnn.SpatialAveragePooling(2, 2))
-      end      
+      end
    end
 
 
    local function addDenseBlock(model, nChannels, opt, N)
-      for i = 1, N do 
+      for i = 1, N do
          addLayer(model, nChannels, opt)
          nChannels = nChannels + opt.growthRate
       end
@@ -64,10 +64,10 @@ local function createModel(opt)
    -- Build DenseNet
    local model = nn.Sequential()
 
-   if opt.dataset == 'cifar10' or opt.dataset == 'cifar100' then
+   if opt.dataset == 'cifar10' or opt.dataset == 'cifar100' or opt.dataset =='lungroi' then
 
       --Initial convolution layer
-      model:add(cudnn.SpatialConvolution(3, nChannels, 3,3, 1,1, 1,1))      
+      model:add(cudnn.SpatialConvolution(3, nChannels, 3,3, 1,1, 1,1))
 
       --Dense-Block 1 and transition
       nChannels = addDenseBlock(model, nChannels, opt, N)
@@ -126,7 +126,7 @@ local function createModel(opt)
    end
 
 
-   if opt.dataset == 'cifar10' then
+   if opt.dataset == 'cifar10' or opt.dataset =='lungroi' then
       model:add(nn.Linear(nChannels, 10))
    elseif opt.dataset == 'cifar100' then
       model:add(nn.Linear(nChannels, 100))
