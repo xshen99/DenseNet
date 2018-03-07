@@ -7,7 +7,7 @@
 --  of patent rights can be found in the PATENTS file in the same directory.
 --
 -- Code modified for DenseNet (https://arxiv.org/abs/1608.06993) by Gao Huang.
--- 
+--
 local M = { }
 
 function M.parse(arg)
@@ -19,7 +19,7 @@ function M.parse(arg)
    cmd:text('Options:')
     ------------ General options --------------------
    cmd:option('-data',       '',         'Path to dataset')
-   cmd:option('-dataset',    'cifar10', 'Options: imagenet | cifar10 | cifar100')
+   cmd:option('-dataset',    'cifar10', 'Options: imagenet | cifar10 | cifar100 | lungroi')
    cmd:option('-manualSeed', 0,          'Manually set RNG seed')
    cmd:option('-nGPU',       1,          'Number of GPUs to use by default')
    cmd:option('-backend',    'cudnn',    'Options: cudnn | cunn')
@@ -96,6 +96,10 @@ function M.parse(arg)
       opt.shortcutType = opt.shortcutType == '' and 'A' or opt.shortcutType
       opt.nEpochs = opt.nEpochs == 0 and 164 or opt.nEpochs
    elseif opt.dataset == 'cifar100' then
+       -- Default shortcutType=A and nEpochs=164
+       opt.shortcutType = opt.shortcutType == '' and 'A' or opt.shortcutType
+       opt.nEpochs = opt.nEpochs == 0 and 164 or opt.nEpochs
+   elseif opt.dataset == 'lungroi' then
        -- Default shortcutType=A and nEpochs=164
        opt.shortcutType = opt.shortcutType == '' and 'A' or opt.shortcutType
        opt.nEpochs = opt.nEpochs == 0 and 164 or opt.nEpochs
