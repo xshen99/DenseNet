@@ -30,7 +30,7 @@ function M.exec(opt, cacheFile)
 
    print(" | combining dataset into a single file")
    local trainData = convertToTensor({
-      'gen/lungDataset.tar/training.t7',
+      'gen/lungDataset/training.t7',
    })
    local testData = convertToTensor({
       'gen/lungDataset/testing.t7',
