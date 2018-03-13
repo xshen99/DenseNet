@@ -26,8 +26,8 @@ end
 
 -- Computed from entire training set
 local meanstd = {
-   mean = {169.5, 190.1, 62.1},
-   std  = {82.7,  81.7,  109.5},
+   mean = {161.1, 183.5, 68.2},
+   std  = {87.8,  83.7,  112.7},
 }
 
 function LungROIDataset:preprocess()
