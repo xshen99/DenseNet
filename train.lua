@@ -50,6 +50,23 @@ function Trainer:train(epoch, dataloader)
    local trainSize = dataloader:size()
    local top1Sum, top5Sum, lossSum = 0.0, 0.0, 0.0
    local N = 0
+   
+   --all
+   local C1 = {
+      [1] = 0,
+      [2] = 0,
+      [3] = 0,
+      [4] = 0,
+      [5] = 0,
+   }
+   --correct
+   local C2 = {
+      [1] = 0,
+      [2] = 0,
+      [3] = 0,
+      [4] = 0,
+      [5] = 0,
+   }
 
    print('=> Training epoch # ' .. epoch)
    -- set the batch norm to training mode
@@ -118,7 +135,7 @@ function Trainer:test(epoch, dataloader)
       local batchSize = output:size(1) / nCrops
       local loss = self.criterion:forward(self.model.output, self.target)
 
-      local top1, top5 = self:computeScore(output, sample.target, nCrops)
+      local top1, top5 = self:computeScoreTest(output, sample.target, nCrops)
       top1Sum = top1Sum + top1*batchSize
       top5Sum = top5Sum + top5*batchSize
       N = N + batchSize
@@ -128,6 +145,10 @@ function Trainer:test(epoch, dataloader)
 
       timer:reset()
       dataTimer:reset()
+      
+      for i=1,5 do
+         print('Label [%d] : [%d] div by [%d]':format(i,C2[i],C1[i]))
+      end
    end
    self.model:training()
 
@@ -153,6 +174,42 @@ function Trainer:computeScore(output, target, nCrops)
    -- Find which predictions match the target
    local correct = predictions:eq(
       target:long():view(batchSize, 1):expandAs(predictions))
+
+   -- Top-1 score
+   local top1 = 1.0 - (correct:narrow(2, 1, 1):sum() / batchSize)
+
+   -- Top-5 score, if there are at least 5 classes
+   local len = math.min(5, correct:size(2))
+   local top5 = 1.0 - (correct:narrow(2, 1, len):sum() / batchSize)
+
+   return top1 * 100, top5 * 100
+end
+
+function Trainer:computeScoreTest(output, target, nCrops)
+   if nCrops > 1 then
+      -- Sum over crops
+      output = output:view(output:size(1) / nCrops, nCrops, output:size(2))
+         --:exp()
+         :sum(2):squeeze(2)
+   end
+
+   -- Coputes the top1 and top5 error rate
+   local batchSize = output:size(1)
+
+   local _ , predictions = output:float():topk(5, 2, true, true) -- descending
+   
+   local x = predictions:narraw(2,1,1)
+   for i = 1,x:size(1) do
+      C1[targert[i]] = C1[target[i]]+1
+      if target[i] == x[i] then
+         C2[target[i] = C2[target[i]]+1
+      end
+   end
+
+   -- Find which predictions match the target
+   local correct = predictions:eq(
+      target:long():view(batchSize, 1):expandAs(predictions))
+      
 
    -- Top-1 score
    local top1 = 1.0 - (correct:narrow(2, 1, 1):sum() / batchSize)

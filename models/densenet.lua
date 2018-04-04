@@ -126,12 +126,14 @@ local function createModel(opt)
    end
 
 
-   if opt.dataset == 'cifar10' or opt.dataset =='lungroi' then
+   if opt.dataset == 'cifar10' then
       model:add(nn.Linear(nChannels, 10))
    elseif opt.dataset == 'cifar100' then
       model:add(nn.Linear(nChannels, 100))
    elseif opt.dataset == 'imagenet' then
       model:add(nn.Linear(nChannels, 1000))
+   elseif opt.dataset =='lungroi' then
+      model:add(nn.Linear(nChannels, 5))
    end
 
    --Initialization following ResNet
