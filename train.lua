@@ -198,7 +198,7 @@ function Trainer:computeScoreTest(output, target, nCrops)
 
    local _ , predictions = output:float():topk(5, 2, true, true) -- descending
    
-   local x = predictions:narraw(2,1,1)
+   local x = predictions:narrow(2,1,1)
    for i = 1,x:size(1) do
       C1[targert[i]] = C1[target[i]]+1
       if target[i] == x[i] then
