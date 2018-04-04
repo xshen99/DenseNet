@@ -200,7 +200,7 @@ function Trainer:computeScoreTest(output, target, nCrops)
    
    local x = predictions:narrow(2,1,1)
    for i = 1,x:size(1) do
-      C1[targert[i]] = C1[target[i]]+1
+      C1[target[i]] = C1[target[i]]+1
       if target[i] == x[i] then
          C2[target[i]] = C2[target[i]]+1
       end
