@@ -148,14 +148,16 @@ function Trainer:test(epoch, dataloader)
       timer:reset()
       dataTimer:reset()
       
-      for i=1,5 do
-         print(('Label [%d] : [%d] div by [%d]'):format(i,C2[i],C1[i]))
-      end
+      
    end
    self.model:training()
 
    print((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
+      
+   for i=1,5 do
+      print(('Label [%d] : [%d] div by [%d]'):format(i,C2[i],C1[i]))
+   end
 
    return top1Sum / N, top5Sum / N
 end
@@ -203,7 +205,7 @@ function Trainer:computeScoreTest(output, target, nCrops)
    local x = predictions:narrow(2,1,1)
    for i = 1,x:size(1) do
       C1[target[i]] = C1[target[i]]+1
-      if target[i] == x[i] then
+      if target[i] == x[i,1] then
          C2[target[i]] = C2[target[i]]+1
       end
    end
