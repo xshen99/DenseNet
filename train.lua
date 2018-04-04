@@ -16,6 +16,23 @@ local optim = require 'optim'
 local M = {}
 local Trainer = torch.class('resnet.Trainer', M)
 
+--all
+   C1 = {
+      [1] = 0,
+      [2] = 0,
+      [3] = 0,
+      [4] = 0,
+      [5] = 0,
+   }
+   --correct
+   C2 = {
+      [1] = 0,
+      [2] = 0,
+      [3] = 0,
+      [4] = 0,
+      [5] = 0,
+   }
+
 function Trainer:__init(model, criterion, opt, optimState)
    self.model = model
    self.criterion = criterion
@@ -51,22 +68,7 @@ function Trainer:train(epoch, dataloader)
    local top1Sum, top5Sum, lossSum = 0.0, 0.0, 0.0
    local N = 0
    
-   --all
-   C1 = {
-      [1] = 0,
-      [2] = 0,
-      [3] = 0,
-      [4] = 0,
-      [5] = 0,
-   }
-   --correct
-   C2 = {
-      [1] = 0,
-      [2] = 0,
-      [3] = 0,
-      [4] = 0,
-      [5] = 0,
-   }
+   
 
    print('=> Training epoch # ' .. epoch)
    -- set the batch norm to training mode
