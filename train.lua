@@ -52,7 +52,7 @@ function Trainer:train(epoch, dataloader)
    local N = 0
    
    --all
-   local C1 = {
+   C1 = {
       [1] = 0,
       [2] = 0,
       [3] = 0,
@@ -60,7 +60,7 @@ function Trainer:train(epoch, dataloader)
       [5] = 0,
    }
    --correct
-   local C2 = {
+   C2 = {
       [1] = 0,
       [2] = 0,
       [3] = 0,
