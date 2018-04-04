@@ -202,7 +202,7 @@ function Trainer:computeScoreTest(output, target, nCrops)
    for i = 1,x:size(1) do
       C1[targert[i]] = C1[target[i]]+1
       if target[i] == x[i] then
-         C2[target[i] = C2[target[i]]+1
+         C2[target[i]] = C2[target[i]]+1
       end
    end
 
