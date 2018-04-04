@@ -16,22 +16,7 @@ local optim = require 'optim'
 local M = {}
 local Trainer = torch.class('resnet.Trainer', M)
 
---all
-   C1 = {
-      [1] = 0,
-      [2] = 0,
-      [3] = 0,
-      [4] = 0,
-      [5] = 0,
-   }
-   --correct
-   C2 = {
-      [1] = 0,
-      [2] = 0,
-      [3] = 0,
-      [4] = 0,
-      [5] = 0,
-   }
+eval = torch.Tensor(5,5):zero()
 
 function Trainer:__init(model, criterion, opt, optimState)
    self.model = model
@@ -155,9 +140,7 @@ function Trainer:test(epoch, dataloader)
    print((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
       
-   for i=1,5 do
-      print(('Label [%d] : [%d] div by [%d]'):format(i,C2[i],C1[i]))
-   end
+   print(eval)
 
    return top1Sum / N, top5Sum / N
 end
@@ -204,10 +187,7 @@ function Trainer:computeScoreTest(output, target, nCrops)
    
    local x = predictions:narrow(2,1,1)
    for i = 1,x:size(1) do
-      C1[target[i]] = C1[target[i]]+1
-      if target[i] == x[i][1] then
-         C2[target[i]] = C2[target[i]]+1
-      end
+      eval[traget[i]][x[i][1]] = eval[traget[i]][x[i][1]]+1
    end
 
    -- Find which predictions match the target
