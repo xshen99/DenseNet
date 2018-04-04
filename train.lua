@@ -147,7 +147,7 @@ function Trainer:test(epoch, dataloader)
       dataTimer:reset()
       
       for i=1,5 do
-         print('Label [%d] : [%d] div by [%d]':format(i,C2[i],C1[i]))
+         print(('Label [%d] : [%d] div by [%d]'):format(i,C2[i],C1[i]))
       end
    end
    self.model:training()
