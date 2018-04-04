@@ -187,7 +187,7 @@ function Trainer:computeScoreTest(output, target, nCrops)
    
    local x = predictions:narrow(2,1,1)
    for i = 1,x:size(1) do
-      eval[traget[i]][x[i][1]] = eval[traget[i]][x[i][1]]+1
+      eval[target[i]][x[i][1]] = eval[target[i]][x[i][1]]+1
    end
 
    -- Find which predictions match the target
