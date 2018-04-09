@@ -99,11 +99,20 @@ function Trainer:train(epoch, dataloader)
       dataTimer:reset()
    end
    
-   file = io.open("log.txt", "a+") 
-   io.write(eval1)
-   io.write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
+   local out = assert(io.open("log.txt", "a+"))
+   for i=1,5 do
+      for j=1,5 do
+         out:write(eval1[i][j])
+         if j == 5 then
+            out:write("\n")
+         else
+            out:write(splitter)
+         end
+      end
+   end
+   out:write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
-   io.close(file)
+   out:close()
 
    return top1Sum / N, top5Sum / N, lossSum / N
 end
@@ -149,11 +158,20 @@ function Trainer:test(epoch, dataloader)
    print((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
    
-   file = io.open("log.txt", "a+") 
-   io.write(eval2)
-   io.write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
+   local out = assert(io.open("log.txt", "a+"))
+   for i=1,5 do
+      for j=1,5 do
+         out:write(eval2[i][j])
+         if j == 5 then
+            out:write("\n")
+         else
+            out:write(splitter)
+         end
+      end
+   end
+   out:write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
-   io.close(file)
+   out:close()
    
    return top1Sum / N, top5Sum / N
 end
