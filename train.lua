@@ -99,7 +99,7 @@ function Trainer:train(epoch, dataloader)
       timer:reset()
       dataTimer:reset()
    end
-   
+   --[[
    local out = assert(io.open("log.txt", "a+"))
    out:write(nOfEpoch)
    out:write("\n")
@@ -117,7 +117,7 @@ function Trainer:train(epoch, dataloader)
    out:write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
    out:close()
-
+]]--
    return top1Sum / N, top5Sum / N, lossSum / N
 end
 
@@ -161,7 +161,7 @@ function Trainer:test(epoch, dataloader)
 
    print((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
-   
+--[[   
    local out = assert(io.open("log.txt", "a+"))
    for i=1,5 do
       for j=1,5 do
@@ -176,7 +176,7 @@ function Trainer:test(epoch, dataloader)
    out:write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
    out:close()
-   
+]]--   
    return top1Sum / N, top5Sum / N
 end
 
