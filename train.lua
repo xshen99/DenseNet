@@ -102,7 +102,7 @@ function Trainer:train(epoch, dataloader)
    
    local out = assert(io.open("log.txt", "a+"))
    out:write(nOfEpoch)
-   out:write("\n')
+   out:write("\n")
    nOfEpoch = nOfEpoch + 1
    for i=1,5 do
       for j=1,5 do
