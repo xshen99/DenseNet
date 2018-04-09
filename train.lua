@@ -16,8 +16,7 @@ local optim = require 'optim'
 local M = {}
 local Trainer = torch.class('resnet.Trainer', M)
 
-eval1 = torch.Tensor(5,5):zero()
-eval2 = torch.Tensor(5,5):zero()
+
 
 function Trainer:__init(model, criterion, opt, optimState)
    self.model = model
@@ -35,6 +34,8 @@ function Trainer:__init(model, criterion, opt, optimState)
 end
 
 function Trainer:train(epoch, dataloader)
+   eval1 = torch.Tensor(5,5):zero()
+   
    -- Trains the model for a single epoch
 
    ------for LR------
@@ -102,6 +103,7 @@ function Trainer:train(epoch, dataloader)
 end
 
 function Trainer:test(epoch, dataloader)
+   eval2 = torch.Tensor(5,5):zero()
    -- Computes the top-1 and top-5 err on the validation set
 
    local timer = torch.Timer()
