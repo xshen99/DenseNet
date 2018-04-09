@@ -15,6 +15,7 @@ local optim = require 'optim'
 
 local M = {}
 local Trainer = torch.class('resnet.Trainer', M)
+nOfEpoch = 1
 
 
 
@@ -100,6 +101,9 @@ function Trainer:train(epoch, dataloader)
    end
    
    local out = assert(io.open("log.txt", "a+"))
+   out:write(nOfEpoch)
+   out:write("\n')
+   nOfEpoch = nOfEpoch + 1
    for i=1,5 do
       for j=1,5 do
          out:write(eval1[i][j])
