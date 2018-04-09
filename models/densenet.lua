@@ -81,7 +81,7 @@ local function createModel(opt)
 
       --Dense-Block 3 and transition
       nChannels = addDenseBlock(model, nChannels, opt, N)
-      addTransition(model, nChannels, nChannels, opt, true, 8)
+      addTransition(model, nChannels, nChannels, opt, true, 2)
 
    elseif opt.dataset == 'imagenet' then
 
