@@ -106,7 +106,7 @@ function Trainer:train(epoch, dataloader)
          if j == 5 then
             out:write("\n")
          else
-            out:write(splitter)
+            out:write("\t")
          end
       end
    end
@@ -165,7 +165,7 @@ function Trainer:test(epoch, dataloader)
          if j == 5 then
             out:write("\n")
          else
-            out:write(splitter)
+            out:write("\t")
          end
       end
    end
