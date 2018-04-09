@@ -67,7 +67,7 @@ local function createModel(opt)
    if opt.dataset == 'cifar10' or opt.dataset == 'cifar100' or opt.dataset =='lungroi' then
 
       --Initial convolution layer
-      model:add(cudnn.SpatialConvolution(3, nChannels, 15,15, 1,1, 1,1))
+      model:add(cudnn.SpatialConvolution(3, nChannels, 7,7, 1,1, 1,1))
 
       --Dense-Block 1 and transition
       nChannels = addDenseBlock(model, nChannels, opt, N)
