@@ -133,7 +133,7 @@ local function createModel(opt)
    elseif opt.dataset == 'imagenet' then
       model:add(nn.Linear(nChannels, 1000))
    elseif opt.dataset =='lungroi' then
-      model:add(nn.Linear(nChannels, 10))
+      model:add(nn.Linear(nChannels, 5))
    end
 
    --Initialization following ResNet

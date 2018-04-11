@@ -15,7 +15,6 @@ local optim = require 'optim'
 
 local M = {}
 local Trainer = torch.class('resnet.Trainer', M)
---nOfEpoch = 1
 
 
 
@@ -35,7 +34,7 @@ function Trainer:__init(model, criterion, opt, optimState)
 end
 
 function Trainer:train(epoch, dataloader)
---   eval1 = torch.Tensor(5,5):zero()
+   eval1 = torch.Tensor(5,5):zero()
    
    -- Trains the model for a single epoch
 
@@ -99,11 +98,8 @@ function Trainer:train(epoch, dataloader)
       timer:reset()
       dataTimer:reset()
    end
-   --[[
+   
    local out = assert(io.open("log.txt", "a+"))
-   out:write(nOfEpoch)
-   out:write("\n")
-   nOfEpoch = nOfEpoch + 1
    for i=1,5 do
       for j=1,5 do
          out:write(eval1[i][j])
@@ -117,12 +113,12 @@ function Trainer:train(epoch, dataloader)
    out:write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
    out:close()
-]]--
+   
    return top1Sum / N, top5Sum / N, lossSum / N
 end
 
 function Trainer:test(epoch, dataloader)
-   --eval2 = torch.Tensor(5,5):zero()
+   eval2 = torch.Tensor(5,5):zero()
    -- Computes the top-1 and top-5 err on the validation set
 
    local timer = torch.Timer()
@@ -144,7 +140,7 @@ function Trainer:test(epoch, dataloader)
       local batchSize = output:size(1) / nCrops
       local loss = self.criterion:forward(self.model.output, self.target)
 
-      local top1, top5 = self:computeScore(output, sample.target, nCrops)
+      local top1, top5 = self:computeScoreTest(output, sample.target, nCrops)
       top1Sum = top1Sum + top1*batchSize
       top5Sum = top5Sum + top5*batchSize
       N = N + batchSize
@@ -161,7 +157,6 @@ function Trainer:test(epoch, dataloader)
 
    print((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
---[[   
    local out = assert(io.open("log.txt", "a+"))
    for i=1,5 do
       for j=1,5 do
@@ -176,7 +171,6 @@ function Trainer:test(epoch, dataloader)
    out:write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
    out:close()
-]]--   
    return top1Sum / N, top5Sum / N
 end
 
@@ -194,9 +188,9 @@ function Trainer:computeScore(output, target, nCrops)
    local _ , predictions = output:float():topk(5, 2, true, true) -- descending
    
    local x = predictions:narrow(2,1,1)
-   --for i = 1,x:size(1) do
-   --   eval1[target[i]][x[i][1]] = eval1[target[i]][x[i][1]]+1
-   --end
+   for i = 1,x:size(1) do
+      eval1[target[i]][x[i][1]] = eval1[target[i]][x[i][1]]+1
+   end
 
    -- Find which predictions match the target
    local correct = predictions:eq(
@@ -211,7 +205,7 @@ function Trainer:computeScore(output, target, nCrops)
 
    return top1 * 100, top5 * 100
 end
---[[
+
 function Trainer:computeScoreTest(output, target, nCrops)
    if nCrops > 1 then
       -- Sum over crops
@@ -243,7 +237,7 @@ function Trainer:computeScoreTest(output, target, nCrops)
 
    return top1 * 100, top5 * 100
 end
-]]--
+
 local function getCudaTensorType(tensorType)
   if tensorType == 'torch.CudaHalfTensor' then
      return cutorch.createCudaHostHalfTensor()
