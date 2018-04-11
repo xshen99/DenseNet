@@ -99,7 +99,7 @@ function Trainer:train(epoch, dataloader)
       dataTimer:reset()
    end
    
-   local out = assert(io.open("log.txt", "a+"))
+   --[[local out = assert(io.open("log.txt", "a+"))
    for i=1,5 do
       for j=1,5 do
          out:write(eval1[i][j])
@@ -112,7 +112,8 @@ function Trainer:train(epoch, dataloader)
    end
    out:write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
-   out:close()
+   out:close()]]
+   print(eval1)
    
    return top1Sum / N, top5Sum / N, lossSum / N
 end
@@ -157,7 +158,8 @@ function Trainer:test(epoch, dataloader)
 
    print((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
-   local out = assert(io.open("log.txt", "a+"))
+   
+   --[[local out = assert(io.open("log.txt", "a+"))
    for i=1,5 do
       for j=1,5 do
          out:write(eval2[i][j])
@@ -170,7 +172,8 @@ function Trainer:test(epoch, dataloader)
    end
    out:write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
-   out:close()
+   out:close()]]
+   print(eval2)
    return top1Sum / N, top5Sum / N
 end
 
@@ -221,6 +224,7 @@ function Trainer:computeScoreTest(output, target, nCrops)
    
    local x = predictions:narrow(2,1,1)
    for i = 1,x:size(1) do
+      eval2[target[i]][x[i][1]] = eval2[target[i]][x[i][1]]+1
    end
 
    -- Find which predictions match the target
