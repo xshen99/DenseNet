@@ -69,7 +69,9 @@ function DataLoader:run()
    local size, batchSize = self.__size, self.batchSize
    --local perm = torch.randperm(size)
    local perm = torch.range(1, size)
-
+   if size > 30000 then
+      perm = torch.randperm(size)
+   end
    local idx, sample = 1, nil
    local function enqueue()
       while idx <= size and threads:acceptsjob() do

@@ -99,20 +99,7 @@ function Trainer:train(epoch, dataloader)
       dataTimer:reset()
    end
    
-   --[[local out = assert(io.open("log.txt", "a+"))
-   for i=1,5 do
-      for j=1,5 do
-         out:write(eval1[i][j])
-         if j == 5 then
-            out:write("\n")
-         else
-            out:write("\t")
-         end
-      end
-   end
-   out:write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
-      epoch, top1Sum / N, top5Sum / N))
-   out:close()]]
+
    print(eval1)
    
    return top1Sum / N, top5Sum / N, lossSum / N
@@ -120,6 +107,7 @@ end
 
 function Trainer:test(epoch, dataloader)
    eval2 = torch.Tensor(5,5):zero()
+   index = {}
    --out = assert(io.open("log.txt", "a+"))
    -- Computes the top-1 and top-5 err on the validation set
 
@@ -159,22 +147,19 @@ function Trainer:test(epoch, dataloader)
 
    print((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
       epoch, top1Sum / N, top5Sum / N))
-   
-   --[[local out = assert(io.open("log.txt", "a+"))
-   for i=1,5 do
-      for j=1,5 do
-         out:write(eval2[i][j])
-         if j == 5 then
-            out:write("\n")
-         else
-            out:write("\t")
+   print(eval2)
+   local data = {}
+   for i = 1,5 do
+      for j = 1,5 do
+         local str = ('%d%d'):format(i, j)
+         local x = torch.Tensor(eval2[i][j])
+         for k = 1,eval2[i][j] do
+            x[k] = index[str][k]
          end
+         data[str] = x
       end
    end
-   out:write((' * Finished epoch # %d     top1: %7.3f  top5: %7.3f\n'):format(
-      epoch, top1Sum / N, top5Sum / N))
-   out:close()]]
-   print(eval2)
+   torch.write('tmp.lua', data)
    return top1Sum / N, top5Sum / N
 end
 
@@ -192,6 +177,7 @@ function Trainer:computeScore(output, target, nCrops)
    local _ , predictions = output:float():topk(5, 2, true, true) -- descending
    
    local x = predictions:narrow(2,1,1)
+   
    for i = 1,x:size(1) do
       eval1[target[i]][x[i][1]] = eval1[target[i]][x[i][1]]+1
    end
@@ -224,8 +210,16 @@ function Trainer:computeScoreTest(output, target, nCrops)
    local _ , predictions = output:float():topk(5, 2, true, true) -- descending
    
    local x = predictions:narrow(2,1,1)
+   
    for i = 1,x:size(1) do
-      eval2[target[i]][x[i][1]] = eval2[target[i]][x[i][1]]+1
+      local str = ('%d%d'):format(target[i], x[i][1])
+      local pos = 100 * nCrops + i
+      local num = eval2[target[i]][x[i][1]]+1
+      if num == 1 then
+         index[str] = {}
+      end
+      index[str][num] = pos
+      eval2[target[i]][x[i][1]] = num
    end
 
    -- Find which predictions match the target
