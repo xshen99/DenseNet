@@ -120,6 +120,7 @@ end
 
 function Trainer:test(epoch, dataloader)
    eval2 = torch.Tensor(5,5):zero()
+   --out = assert(io.open("log.txt", "a+"))
    -- Computes the top-1 and top-5 err on the validation set
 
    local timer = torch.Timer()
