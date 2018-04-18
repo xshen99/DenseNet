@@ -159,7 +159,7 @@ function Trainer:test(epoch, dataloader)
          data[str] = x
       end
    end
-   torch.write('tmp.lua', data)
+   torch.save('tmp.t7', data)
    return top1Sum / N, top5Sum / N
 end
 
