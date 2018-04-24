@@ -108,6 +108,7 @@ end
 function Trainer:test(epoch, dataloader)
    eval2 = torch.Tensor(5,5):zero()
    index = {}
+   loop = 0
    --out = assert(io.open("log.txt", "a+"))
    -- Computes the top-1 and top-5 err on the validation set
 
@@ -211,9 +212,10 @@ function Trainer:computeScoreTest(output, target, nCrops)
    
    local x = predictions:narrow(2,1,1)
    
+   loop = loop+1
    for i = 1,x:size(1) do
       local str = ('%d%d'):format(target[i], x[i][1])
-      local pos = 100 * nCrops + i
+      local pos = 100 * loop + i
       local num = eval2[target[i]][x[i][1]]+1
       if num == 1 then
          index[str] = {}
