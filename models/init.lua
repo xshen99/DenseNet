@@ -114,7 +114,7 @@ function M.setup(opt, checkpoint)
       model = dpt:type(opt.tensorType)
    end
 
-   local criterion = nn.CrossEntropyCriterion(torch.Tensor({3.256, 21.761, 8.1, 6.338, 2.734})):type(opt.tensorType)
+   local criterion = nn.CrossEntropyCriterion(torch.Tensor({0.3256, 2.1761, 0.81, 0.6338, 0.2734})):type(opt.tensorType)
    criterion.nll.sizeAverage = false
    return model, criterion
 end
