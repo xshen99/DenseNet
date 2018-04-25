@@ -215,7 +215,7 @@ function Trainer:computeScoreTest(output, target, nCrops)
    loop = loop+1
    for i = 1,x:size(1) do
       local str = ('%d%d'):format(target[i], x[i][1])
-      local pos = 100 * loop + i
+      local pos = 64 * loop + i
       local num = eval2[target[i]][x[i][1]]+1
       if num == 1 then
          index[str] = {}
